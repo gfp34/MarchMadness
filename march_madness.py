@@ -1,12 +1,7 @@
 import csv
-import io
 import os
 import random
 import shutil
-
-from PyPDF2 import PdfFileReader
-from PyPDF2 import PdfFileWriter
-from reportlab.pdfgen import canvas
 
 CHALK = 'Chalk'
 SIMULATED = 'Simulated'
@@ -45,16 +40,6 @@ PLAYIN_INDEX = {
         11: 66
     }
 }
-ROUND_SECTIONS = {
-    1: (63, 67),
-    2: (31, 63),
-    3: (15, 31),
-    4: (7, 15),
-    5: (3, 7),
-    6: (1, 3),
-    7: (0, 1)
-}
-TOP_ROW_TEAM_IDS = [2450, 2724, 116, 127]
 
 
 def main():
@@ -63,7 +48,6 @@ def main():
     b = Bracket(teams, CHALK)
     b.play()
     print(b)
-    b.draw_pdf("data/blank2021.pdf", "chalk.pdf")
     b.save("chalk.csv")
 
 
@@ -79,7 +63,6 @@ def generate_brackets(num, teams, folder_name):
         b = Bracket(teams, SIMULATED)
         b.play()
         b.save(f"{folder_name}/csv/bracket_{i}.csv")
-        b.draw_pdf("data/blank2021.pdf", f"{folder_name}/pdf/bracket_{i}.pdf")
         print("Saved bracket:", i)
 
 
@@ -112,9 +95,8 @@ class Bracket:
     def save(self, filename):
         bracket_csv = open(filename, 'w')
         bracket_writer = csv.writer(bracket_csv, delimiter=',')
-        bracket_writer.writerow(["team_name", "team_seed", "team_rating", "team_region", "playin_flag", "team_id"
-                                                                                                        "rd1_win",
-                                 "rd2_win", "rd3_win", "rd4_win", "rd5_win", "rd6_win", "rd7_win"])
+        bracket_writer.writerow(["team_name", "team_seed", "team_rating", "team_region", "playin_flag", "team_id",
+                                 "rd1_win", "rd2_win", "rd3_win", "rd4_win", "rd5_win", "rd6_win", "rd7_win"])
         bracket_sections = {1: 63, 2: 31, 3: 15, 4: 7, 5: 3, 6: 1, 7: 0}
         for team in self.teams:
             team_data = [team.name, str(team.seed) + (team.playin_id if team.playin_id is not None else ""),
@@ -139,80 +121,6 @@ class Bracket:
                              row["team_region"], bool(int(row["playin_flag"])), int(row["team_id"]))]
                 wins = [row[f"rd{i}_win"] for i in range(1, 8)]
                 # TODO
-
-    def draw_pdf(self, blank_filename, filename):
-        tmp_pdf = io.BytesIO()
-        can = canvas.Canvas(tmp_pdf)
-        can.setFontSize(7)
-
-        # Box first 4 winners
-        xs = [154, 260, 452, 560]
-        y = 490
-        h = 79
-        w = 10
-        for game, x in zip(self.bracket_heap[ROUND_SECTIONS[1][0]:ROUND_SECTIONS[1][1]], xs):
-            if game.winner.team_id in TOP_ROW_TEAM_IDS:
-                can.rect(x, y, h, w)
-            else:
-                can.rect(x, y-14, 79, 10)
-
-        bracket_pdf_points = {
-            # left start point, right start point, dy val, switch value
-            1: ((0, 463), (763, 463), 25, 16),
-            2: ((127, 456), (607, 456), 29, 16),
-            3: ((187, 442), (555, 442), 58, 8),
-            4: ((237, 413), (507, 413), 116, 4),
-            5: ((286, 357), (460, 357), 234, 2),
-            6: ((290, 235), (442, 235), 0, 1)
-        }
-
-        # Put win prob on first round
-        x, y = bracket_pdf_points[1][0]
-        dy = 25
-        switch = bracket_pdf_points[1][3]
-        for i in range(ROUND_SECTIONS[2][0], ROUND_SECTIONS[2][1], 1):
-            if switch == 0:
-                x, y = bracket_pdf_points[1][1]
-                switch = bracket_pdf_points[1][3]
-                dy = 25
-            can.drawString(x, y, f"({self.bracket_heap[i].win_prob:.2%})")
-            can.drawString(x, y - dy/2, f"({1 - self.bracket_heap[i].win_prob:.2%})")
-            y -= dy
-            if switch == bracket_pdf_points[1][3]/2:
-                y -= 10
-                dy = 33
-            switch -= 1
-
-        # Fill in rounds
-        for r in range(2, 7):
-            x, y = bracket_pdf_points[r][0]
-            switch = bracket_pdf_points[r][3]
-            for i in range(ROUND_SECTIONS[r][0], ROUND_SECTIONS[r][1]):
-                if switch == 0:
-                    x, y = bracket_pdf_points[r][1]
-                    switch = bracket_pdf_points[r][3]
-                win_prob = self.bracket_heap[(i-1)//2].win_prob
-                if self.bracket_heap[(i-1)//2].teams[1] == self.bracket_heap[i].winner:
-                    win_prob = 1 - win_prob
-                can.drawString(x, y, str(self.bracket_heap[i].winner) + f" ({win_prob:.2%})")
-                y -= bracket_pdf_points[r][2]
-                switch -= 1
-        # Fill in winner
-        can.drawString(363, 235, str(self.bracket_heap[0].winner))
-
-        can.save()
-
-        watermark = PdfFileReader(tmp_pdf)
-
-        out_pdf = PdfFileWriter()
-        blank_pdf = PdfFileReader(open(blank_filename, 'rb'))
-
-        blank_page = blank_pdf.getPage(0)
-        blank_page.mergePage(watermark.getPage(0))
-        out_pdf.addPage(blank_page)
-
-        with open(filename, 'wb') as out_stream:
-            out_pdf.write(out_stream)
 
     def __str__(self):
         s = ""
@@ -303,10 +211,8 @@ class Game:
         elif len(self.teams) == 1:
             return f"{self.teams[0]} vs. TBD"
         else:
-            if self.winner is not None:
-                return f"{self.teams[0]} ({self.win_prob:.2%}) vs. {self.teams[1]} ({1 - self.win_prob:.2%}) -> {self.winner}"
-            else:
-                return f"{self.teams[0]} ({self.win_prob:.2%}) vs. {self.teams[1]} ({1 - self.win_prob:.2%})"
+            game_str = f"{self.teams[0]} ({self.win_prob:.2%}) vs. {self.teams[1]} ({1 - self.win_prob:.2%})"
+            return game_str + f" -> {self.winner}" if self.winner is not None else ""
 
     def __eq__(self, other):
         return type(other) == Game and self.teams[0] == other.teams[0] and self.teams[1] == other.teams[1]
