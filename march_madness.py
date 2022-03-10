@@ -58,7 +58,6 @@ def generate_brackets(num, teams, folder_name):
 		shutil.rmtree(folder_name)
 		os.mkdir(folder_name)
 	os.mkdir(folder_name + "/csv")
-	os.mkdir(folder_name + "/pdf")
 	for i in range(num):
 		b = Bracket(teams, SIMULATED)
 		b.play()
