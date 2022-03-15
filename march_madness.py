@@ -40,15 +40,22 @@ PLAYIN_INDEX = {
 		11: 66
 	}
 }
+PARENT = lambda i: (i - 1) // 2
+LEFT_CHILD = lambda i: (i * 2) + 1
+RIGHT_CHILD = lambda i: (i * 2) + 2
 
 
 def main():
-	teams = read_teams_file("data/fivethirtyeight_ncaa_forecasts.csv")
-	# generate_brackets(100, teams, folder_name="100_brackets")
-	b = Bracket(teams, CHALK)
-	b.play()
+	teams = read_teams_file("data/fivethirtyeight_ncaa_forecasts_2021.csv")
+	generate_brackets(100, teams, folder_name="100_brackets")
+	b = Bracket(teams)
+	b.play(SIMULATED)
 	print(b)
-	b.save("chalk.csv")
+	b.save('random.csv')
+
+	loaded_bracket = Bracket(teams)
+	loaded_bracket.load("random.csv")
+	print(loaded_bracket)
 
 
 def generate_brackets(num, teams, folder_name):
@@ -59,35 +66,35 @@ def generate_brackets(num, teams, folder_name):
 		os.mkdir(folder_name)
 	os.mkdir(folder_name + "/csv")
 	for i in range(num):
-		b = Bracket(teams, SIMULATED)
-		b.play()
+		b = Bracket(teams)
+		b.play(SIMULATED)
 		b.save(f"{folder_name}/csv/bracket_{i}.csv")
 		print("Saved bracket:", i)
 
 
 class Bracket:
 
-	def __init__(self, teams, picker):
+	def __init__(self, teams):
 		self.teams = teams
-		self.bracket_heap = [Game(picker) for _ in range(NUM_GAMES)]
+		self.bracket_heap = [Game() for _ in range(NUM_GAMES)]
 		for team in teams:
 			if team.playin_flag:
 				self.bracket_heap[PLAYIN_INDEX[team.region][team.seed]].add_team(team)
 			else:
 				self.bracket_heap[BRACKET_INDEX[team.seed] + REGION_OFFSET[team.region]].add_team(team)
 
-	def play(self):
+	def play(self, picker):
 		# Play the first four
 		for game in self.bracket_heap[63:]:
-			winner = game.pick_winner()
+			winner = game.pick_winner(picker)
 			self.bracket_heap[BRACKET_INDEX[winner.seed] + REGION_OFFSET[winner.region]].add_team(winner)
 
 		# Play the rest of the bracket
 		def play_game(i):
 			if not (self.bracket_heap[i].is_ready()):
-				self.bracket_heap[i].add_team(play_game(2 * i + 1))
-				self.bracket_heap[i].add_team(play_game(2 * i + 2))
-			return self.bracket_heap[i].pick_winner()
+				self.bracket_heap[i].add_team(play_game(LEFT_CHILD(i)))
+				self.bracket_heap[i].add_team(play_game(RIGHT_CHILD(i)))
+			return self.bracket_heap[i].pick_winner(picker)
 
 		play_game(0)
 
@@ -99,7 +106,7 @@ class Bracket:
 		bracket_sections = {1: 63, 2: 31, 3: 15, 4: 7, 5: 3, 6: 1, 7: 0}
 		for team in self.teams:
 			team_data = [team.name, str(team.seed) + (team.playin_id if team.playin_id is not None else ""),
-						 team.rating, team.region, int(team.playin_flag)]
+						 team.rating, team.region, int(team.playin_flag), team.team_id]
 			wins = []
 			for i in bracket_sections:
 				if i == 1 and not team.playin_flag:
@@ -113,13 +120,31 @@ class Bracket:
 
 	def load(self, filename):
 		bracket_csv = open(filename, 'r')
-		bracket_reader = csv.DictReader(bracket_csv, delimiter=',')
+		bracket_reader = csv.DictReader(bracket_csv)
 		for row in bracket_reader:
-			if row["gender"] == "mens":
-				team = [Team(row["team_name"], float(row["team_rating"]), int(row["team_seed"][:2]),
-							 row["team_region"], bool(int(row["playin_flag"])), int(row["team_id"]))]
-				wins = [row[f"rd{i}_win"] for i in range(1, 8)]
-				# TODO
+			# Read teams and wins from csv
+			team = Team(row["team_name"], float(row["team_rating"]), int(row["team_seed"][:2]),
+						row["team_region"], bool(int(row["playin_flag"])), int(row["team_id"]))
+			wins = [bool(int(row[f"rd{i}_win"])) for i in range(1, 8)]
+
+			for i, game in enumerate(self.bracket_heap[31:]):
+				if team in game:
+					bracket_index = 31 + i
+					break
+
+			if not team.playin_flag:
+				# Skip the first round win if not a playin team
+				wins = wins[1:]
+			for won_game in wins:
+				if won_game:
+					self.bracket_heap[bracket_index].winner = team
+					bracket_index = PARENT(bracket_index)
+					self.bracket_heap[bracket_index].add_team(team)
+				else:
+					break
+
+			if wins[-1]:
+				self.bracket_heap[0].winner = team
 
 	def __str__(self):
 		s = ""
@@ -157,22 +182,13 @@ class Bracket:
 
 class Game:
 
-	def __init__(self, picker):
-		self.picker = picker
+	def __init__(self):
 		self.teams = []
 		self.win_prob = None
 		self.winner = None
 
 	def add_team(self, team):
 		self.teams += [team]
-		if len(self.teams) == 2:
-			if self.picker == SIMULATED:
-				self.win_prob = 1 / (1 + 10 ** -((self.teams[0].rating - self.teams[1].rating) * 30.464 / 400))
-			else:
-				if self.teams[0].playin_flag and self.teams[1].playin_flag:
-					self.win_prob = 1 if self.teams[0].playin_id < self.teams[1].playin_id else 0
-				else:
-					self.win_prob = 1 if self.teams[0].seed <= self.teams[1].seed else 0
 
 	def is_ready(self):
 		return len(self.teams) == 2
@@ -197,8 +213,15 @@ class Game:
 			# self.win_prob = 0
 			return self.teams[1]
 
-	def pick_winner(self):
-		if self.picker == SIMULATED:
+	def pick_winner(self, picker):
+		if picker == SIMULATED:
+			self.win_prob = 1 / (1 + 10 ** -((self.teams[0].rating - self.teams[1].rating) * 30.464 / 400))
+		else:
+			if self.teams[0].playin_flag and self.teams[1].playin_flag:
+				self.win_prob = 1 if self.teams[0].playin_id < self.teams[1].playin_id else 0
+			else:
+				self.win_prob = 1 if self.teams[0].seed <= self.teams[1].seed else 0
+		if picker == SIMULATED:
 			self.winner = self.random_winner()
 		else:
 			self.winner = self.chalk_winner()
@@ -210,11 +233,15 @@ class Game:
 		elif len(self.teams) == 1:
 			return f"{self.teams[0]} vs. TBD"
 		else:
+			self.win_prob = 1 / (1 + 10 ** -((self.teams[0].rating - self.teams[1].rating) * 30.464 / 400))
 			game_str = f"{self.teams[0]} ({self.win_prob:.2%}) vs. {self.teams[1]} ({1 - self.win_prob:.2%})"
-			return game_str + f" -> {self.winner}" if self.winner is not None else ""
+			return game_str + (f" -> {self.winner}" if self.winner is not None else "")
 
 	def __eq__(self, other):
 		return type(other) == Game and self.teams[0] == other.teams[0] and self.teams[1] == other.teams[1]
+
+	def __contains__(self, item):
+		return type(item) == Team and item in self.teams
 
 
 class Team:
