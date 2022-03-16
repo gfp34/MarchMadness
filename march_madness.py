@@ -55,9 +55,13 @@ def main():
 	print(b)
 	b.save('random.csv')
 
+	print('==============================')
+
 	loaded_bracket = Bracket(teams)
 	loaded_bracket.load("random.csv")
 	print(loaded_bracket)
+
+	print(b == loaded_bracket)
 
 
 def generate_brackets(num, teams, folder_name):
@@ -140,6 +144,7 @@ class Bracket:
 					# Play-in team wins first game
 					self.bracket_heap[PLAYIN_INDEX[team.region][team.seed]].winner = team
 					self.bracket_heap[BRACKET_INDEX[team.seed] + REGION_OFFSET[team.region]].teamB = team
+					bracket_index = BRACKET_INDEX[team.seed] + REGION_OFFSET[team.region]
 			wins = wins[1:]
 
 			# Loop through game wins and advance winning teams in bracket
@@ -189,6 +194,9 @@ class Bracket:
 			s += "WINNER: " + str(self.bracket_heap[0].winner)
 
 		return s
+
+	def __eq__(self, other):
+		return type(other) == Bracket and self.bracket_heap == other.bracket_heap
 
 
 class Game:
@@ -265,7 +273,7 @@ class Game:
 		return s + (f" -> {self.winner}" if self.winner is not None else "")
 
 	def __eq__(self, other):
-		return type(other) == Game and self.teamA == other.teamA and self.teamB == other.teamB
+		return type(other) == Game and self.teamA == other.teamA and self.teamB == other.teamB and self.winner == other.winner
 
 	def __contains__(self, item):
 		return type(item) == Team and (item == self.teamA or item == self.teamB)
