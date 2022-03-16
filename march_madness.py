@@ -50,10 +50,10 @@ RIGHT_CHILD = lambda i: (i * 2) + 2
 def main():
 	teams = read_teams_file("data/fivethirtyeight_ncaa_forecasts.csv")
 	# generate_brackets(100, teams, folder_name="100_brackets")
-	# b = Bracket(teams)
-	# b.play(SIMULATED)
-	# print(b)
-	# b.save('random.csv')
+	b = Bracket(teams)
+	b.play(SIMULATED)
+	print(b)
+	b.save('random.csv')
 
 	loaded_bracket = Bracket(teams)
 	loaded_bracket.load("random.csv")
@@ -138,6 +138,7 @@ class Bracket:
 			if team.playin_flag:
 				if wins[0]:
 					# Play-in team wins first game
+					self.bracket_heap[PLAYIN_INDEX[team.region][team.seed]].winner = team
 					self.bracket_heap[BRACKET_INDEX[team.seed] + REGION_OFFSET[team.region]].teamB = team
 			wins = wins[1:]
 
@@ -147,15 +148,14 @@ class Bracket:
 					child_bracket_index = bracket_index
 					self.bracket_heap[child_bracket_index].winner = team
 					bracket_index = PARENT(child_bracket_index)
+					if bracket_index == -1:
+						break
 					if LEFT_CHILD(bracket_index) == child_bracket_index:
 						self.bracket_heap[bracket_index].teamA = team
 					else:
 						self.bracket_heap[bracket_index].teamB = team
 				else:
 					break
-
-			if wins[-1]:
-				self.bracket_heap[0].winner = team
 
 	def __str__(self):
 		s = ""
