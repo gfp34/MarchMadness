@@ -1,0 +1,69 @@
+team_name,team_seed,team_rating,team_region,playin_flag,team_id,rd1_win,rd2_win,rd3_win,rd4_win,rd5_win,rd6_win,rd7_win
+Gonzaga,1,98.38,West,0,2250,1,1,1,1,1,1,1
+Baylor,1,97.13,South,0,239,1,1,1,1,1,1,0
+UCLA,11,88.97,East,1,26,1,1,1,1,1,0,0
+Houston,2,93.12,Midwest,0,248,1,1,1,1,1,0,0
+Southern California,6,90.96,West,0,30,1,1,1,1,0,0,0
+Michigan,1,90.96,East,0,130,1,1,1,1,0,0,0
+Oregon State,12,86.15,Midwest,0,204,1,1,1,1,0,0,0
+Arkansas,3,88.38,South,0,8,1,1,1,1,0,0,0
+Creighton,5,88.85,West,0,156,1,1,1,0,0,0,0
+Oregon,7,87.39,West,0,2483,1,1,1,0,0,0,0
+Florida State,4,88.93,East,0,52,1,1,1,0,0,0,0
+Alabama,2,90.57,East,0,333,1,1,1,0,0,0,0
+Loyola (IL),8,88.6,Midwest,0,2350,1,1,1,0,0,0,0
+Syracuse,11,86.02,Midwest,0,183,1,1,1,0,0,0,0
+Villanova,5,87.75,South,0,222,1,1,1,0,0,0,0
+Oral Roberts,15,76.43,South,0,198,1,1,1,0,0,0,0
+Oklahoma,8,81.98,West,0,201,1,1,0,0,0,0,0
+Ohio,13,79.18,West,0,195,1,1,0,0,0,0,0
+Kansas,3,88.23,West,0,2305,1,1,0,0,0,0,0
+Iowa,2,90.92,West,0,2294,1,1,0,0,0,0,0
+Louisiana State,8,86.3,East,0,99,1,1,0,0,0,0,0
+Colorado,5,87.2,East,0,38,1,1,0,0,0,0,0
+Abilene Christian,14,78.06,East,0,2000,1,1,0,0,0,0,0
+Maryland,10,85.64,East,0,120,1,1,0,0,0,0,0
+Illinois,1,93.92,Midwest,0,356,1,1,0,0,0,0,0
+Oklahoma State,4,85.28,Midwest,0,197,1,1,0,0,0,0,0
+West Virginia,3,86.86,Midwest,0,277,1,1,0,0,0,0,0
+Rutgers,10,84.74,Midwest,0,164,1,1,0,0,0,0,0
+Wisconsin,9,89.19,South,0,275,1,1,0,0,0,0,0
+North Texas,13,80.45,South,0,249,1,1,0,0,0,0,0
+Texas Tech,6,87.26,South,0,2641,1,1,0,0,0,0,0
+Florida,7,83.71,South,0,57,1,1,0,0,0,0,0
+Norfolk State,16,68.88,West,1,2450,1,0,0,0,0,0,0
+Missouri,9,81.85,West,0,142,1,0,0,0,0,0,0
+UC-Santa Barbara,12,78.41,West,0,2540,1,0,0,0,0,0,0
+Virginia,4,88.07,West,0,258,1,0,0,0,0,0,0
+Drake,11,78.18,West,1,2181,1,0,0,0,0,0,0
+Eastern Washington,14,76.07,West,0,331,1,0,0,0,0,0,0
+Virginia Commonwealth,10,81.69,West,0,2670,1,0,0,0,0,0,0
+Grand Canyon,15,74.72,West,0,2253,1,0,0,0,0,0,0
+Texas Southern,16,69.88,East,1,2640,1,0,0,0,0,0,0
+St. Bonaventure,9,82.87,East,0,179,1,0,0,0,0,0,0
+Georgetown,12,81.33,East,0,46,1,0,0,0,0,0,0
+North Carolina-Greensboro,13,77.75,East,0,2430,1,0,0,0,0,0,0
+Brigham Young,6,84.53,East,0,252,1,0,0,0,0,0,0
+Texas,3,86.75,East,0,251,1,0,0,0,0,0,0
+Connecticut,7,85.26,East,0,41,1,0,0,0,0,0,0
+Iona,15,71.81,East,0,314,1,0,0,0,0,0,0
+Drexel,16,72.43,Midwest,0,2182,1,0,0,0,0,0,0
+Georgia Tech,9,79.84,Midwest,0,59,1,0,0,0,0,0,0
+Tennessee,5,85.79,Midwest,0,2633,1,0,0,0,0,0,0
+Liberty,13,76.98,Midwest,0,2335,1,0,0,0,0,0,0
+San Diego State,6,85.6,Midwest,0,21,1,0,0,0,0,0,0
+Morehead State,14,73.72,Midwest,0,2413,1,0,0,0,0,0,0
+Clemson,7,82.37,Midwest,0,228,1,0,0,0,0,0,0
+Cleveland State,15,71.8,Midwest,0,325,1,0,0,0,0,0,0
+Hartford,16,70.93,South,0,42,1,0,0,0,0,0,0
+North Carolina,8,86.09,South,0,153,1,0,0,0,0,0,0
+Winthrop,12,78.42,South,0,2737,1,0,0,0,0,0,0
+Purdue,4,86.47,South,0,2509,1,0,0,0,0,0,0
+Utah State,11,82.37,South,0,328,1,0,0,0,0,0,0
+Colgate,14,79.61,South,0,2142,1,0,0,0,0,0,0
+Virginia Tech,10,81.21,South,0,259,1,0,0,0,0,0,0
+Ohio State,2,89.35,South,0,194,1,0,0,0,0,0,0
+Appalachian State,16,70.28,West,1,2026,0,0,0,0,0,0,0
+Wichita State,11,79.9,West,1,2724,0,0,0,0,0,0,0
+Mount St. Mary's,16,68.91,East,1,116,0,0,0,0,0,0,0
+Michigan State,11,82.87,East,1,127,0,0,0,0,0,0,0
