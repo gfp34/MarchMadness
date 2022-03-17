@@ -162,15 +162,23 @@ class Bracket:
 				else:
 					break
 
-	def score(self, correct_bracket):
+	def score(self, correct_bracket, disregard_first_four=True):
 		total_score = 0
 		round_score = 32
 		round_games = 1
 		played_in_round = 0
-		for game, real_game in zip(self.bracket_heap, correct_bracket.bracket_heap):
+		for game, real_game in zip(self.bracket_heap[:63], correct_bracket.bracket_heap[:63]):
 			# Add round_score to total_score if game's winner predicted correctly
 			if game.winner == real_game.winner:
 				total_score += round_score
+			else:
+				if disregard_first_four:
+					# Check if wrong team from correct first four game is geussed
+					if game.winner.playin_flag and real_game.winner.playin_flag:
+						for first_four_game in self.bracket_heap[63:]:
+							if game.winner in first_four_game and real_game.winner in first_four_game:
+								total_score += round_score
+								break
 
 			# Increment number of games played_in_round
 			played_in_round += 1
@@ -178,9 +186,10 @@ class Bracket:
 			# If all games of this round are played, 1/2 score of next round,
 			# double games of next round, and reset played it round
 			if played_in_round == round_games:
-				round_score /= 2
+				round_score //= 2
 				round_games *= 2
 				played_in_round = 0
+		return total_score
 
 	def __str__(self):
 		s = ""
