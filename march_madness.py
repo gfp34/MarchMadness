@@ -48,20 +48,13 @@ RIGHT_CHILD = lambda i: (i * 2) + 2
 
 
 def main():
-	teams = read_teams_file("data/fivethirtyeight_ncaa_forecasts.csv")
-	# generate_brackets(100, teams, folder_name="100_brackets")
-	b = Bracket(teams)
-	b.play(SIMULATED)
-	print(b)
-	b.save('random.csv')
-
-	print('==============================')
-
-	loaded_bracket = Bracket(teams)
-	loaded_bracket.load("random.csv")
-	print(loaded_bracket)
-
-	print(b == loaded_bracket)
+	teams = read_teams_file("data/2021/fivethirtyeight_ncaa_forecasts_2021.csv")
+	# generate_brackets(1000, teams, "1000_brackets")
+	correct_bracket = Bracket(teams)
+	correct_bracket.load("data/2021/final_bracket_2021.csv")
+	best = find_best_bracket(teams, "1000_brackets", correct_bracket)
+	print(best)
+	print(best.score(correct_bracket))
 
 
 def generate_brackets(num, teams, folder_name):
@@ -76,6 +69,19 @@ def generate_brackets(num, teams, folder_name):
 		b.play(SIMULATED)
 		b.save(f"{folder_name}/csv/bracket_{i}.csv")
 		print("Saved bracket:", i)
+
+
+def find_best_bracket(teams, folder_name, correct_bracket):
+	best_bracket = None
+	try:
+		for filename in os.listdir(folder_name + "/csv"):
+			b = Bracket(teams)
+			b.load(folder_name + "/csv/" + filename)
+			best_bracket = max(best_bracket, b, key=lambda x: x.score(correct_bracket) if x is not None else float('-inf'))
+	except FileNotFoundError:
+		print(folder_name + "/csv Not found")
+
+	return best_bracket
 
 
 class Bracket:
