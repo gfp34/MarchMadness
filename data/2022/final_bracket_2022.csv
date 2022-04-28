@@ -1,0 +1,69 @@
+team_name,team_seed,team_rating,team_region,playin_flag,team_id,rd1_win,rd2_win,rd3_win,rd4_win,rd5_win,rd6_win,rd7_win
+Kansas,1,95.34,Midwest,0,2305,1,1,1,1,1,1,1
+North Carolina,8,91.24,East,0,153,1,1,1,1,1,1,0
+Duke,2,92.67,West,0,150,1,1,1,1,1,0,0
+Villanova,2,89.94,South,0,222,1,1,1,1,1,0,0
+Arkansas,4,89.96,West,0,8,1,1,1,1,0,0,0
+Saint Peter's,15,80.14,East,0,2612,1,1,1,1,0,0,0
+Miami (FL),10,87.33,Midwest,0,2390,1,1,1,1,0,0,0
+Houston,5,92.15,South,0,248,1,1,1,1,0,0,0
+Gonzaga,1,96.57,West,0,2250,1,1,1,0,0,0,0
+Texas Tech,3,89.55,West,0,2641,1,1,1,0,0,0,0
+UCLA,4,90.93,East,0,26,1,1,1,0,0,0,0
+Purdue,3,90.06,East,0,2509,1,1,1,0,0,0,0
+Providence,4,87.4,Midwest,0,2507,1,1,1,0,0,0,0
+Iowa State,11,83.03,Midwest,0,66,1,1,1,0,0,0,0
+Arizona,1,91.68,South,0,12,1,1,1,0,0,0,0
+Michigan,11,86.19,South,0,130,1,1,1,0,0,0,0
+Memphis,9,86.23,West,0,235,1,1,0,0,0,0,0
+New Mexico State,12,79.91,West,0,166,1,1,0,0,0,0,0
+Notre Dame,11,84.18,West,1,87,1,1,0,0,0,0,0
+Michigan State,7,83.93,West,0,127,1,1,0,0,0,0,0
+Baylor,1,88.82,East,0,239,1,1,0,0,0,0,0
+Saint Mary's (CA),5,85.52,East,0,2608,1,1,0,0,0,0,0
+Texas,6,87.28,East,0,251,1,1,0,0,0,0,0
+Murray State,7,82.13,East,0,93,1,1,0,0,0,0,0
+Creighton,9,79.32,Midwest,0,156,1,1,0,0,0,0,0
+Richmond,12,81.41,Midwest,0,257,1,1,0,0,0,0,0
+Wisconsin,3,84.9,Midwest,0,275,1,1,0,0,0,0,0
+Auburn,2,89.63,Midwest,0,2,1,1,0,0,0,0,0
+Texas Christian,9,84.24,South,0,2628,1,1,0,0,0,0,0
+Illinois,4,87.63,South,0,356,1,1,0,0,0,0,0
+Tennessee,3,89.09,South,0,2633,1,1,0,0,0,0,0
+Ohio State,7,85.42,South,0,194,1,1,0,0,0,0,0
+Georgia State,16,73.46,West,0,2247,1,0,0,0,0,0,0
+Boise State,8,82.49,West,0,68,1,0,0,0,0,0,0
+Connecticut,5,86.55,West,0,41,1,0,0,0,0,0,0
+Vermont,13,80.32,West,0,261,1,0,0,0,0,0,0
+Alabama,6,85.15,West,0,333,1,0,0,0,0,0,0
+Montana State,14,74.3,West,0,147,1,0,0,0,0,0,0
+Davidson,10,81.83,West,0,2166,1,0,0,0,0,0,0
+Cal State Fullerton,15,71.78,West,0,2239,1,0,0,0,0,0,0
+Norfolk State,16,71.39,East,0,2450,1,0,0,0,0,0,0
+Marquette,9,81.9,East,0,269,1,0,0,0,0,0,0
+Indiana,12,83.45,East,1,84,1,0,0,0,0,0,0
+Akron,13,76.65,East,0,2006,1,0,0,0,0,0,0
+Virginia Tech,11,84.68,East,0,259,1,0,0,0,0,0,0
+Yale,14,74.74,East,0,43,1,0,0,0,0,0,0
+San Francisco,10,82.94,East,0,2539,1,0,0,0,0,0,0
+Kentucky,2,91.22,East,0,96,1,0,0,0,0,0,0
+Texas Southern,16,71.14,Midwest,1,2640,1,0,0,0,0,0,0
+San Diego State,8,83.49,Midwest,0,21,1,0,0,0,0,0,0
+Iowa,5,88.96,Midwest,0,2294,1,0,0,0,0,0,0
+South Dakota State,13,79.67,Midwest,0,2571,1,0,0,0,0,0,0
+Louisiana State,6,85.72,Midwest,0,99,1,0,0,0,0,0,0
+Colgate,14,76.4,Midwest,0,2142,1,0,0,0,0,0,0
+Southern California,7,83.02,Midwest,0,30,1,0,0,0,0,0,0
+Jacksonville State,15,73.15,Midwest,0,55,1,0,0,0,0,0,0
+Wright State,16,74.25,South,1,2750,1,0,0,0,0,0,0
+Seton Hall,8,82.61,South,0,2550,1,0,0,0,0,0,0
+Alabama-Birmingham,12,81.17,South,0,5,1,0,0,0,0,0,0
+Chattanooga,13,78.7,South,0,236,1,0,0,0,0,0,0
+Colorado State,6,81.65,South,0,36,1,0,0,0,0,0,0
+Longwood,14,73.42,South,0,2344,1,0,0,0,0,0,0
+Loyola (IL),10,83.7,South,0,2350,1,0,0,0,0,0,0
+Delaware,15,73.57,South,0,48,1,0,0,0,0,0,0
+Rutgers,11,81.13,West,1,164,0,0,0,0,0,0,0
+Wyoming,12,78.49,East,1,2751,0,0,0,0,0,0,0
+Texas A&M-Corpus Christi,16,67.3,Midwest,1,357,0,0,0,0,0,0,0
+Bryant,16,71.55,South,1,2803,0,0,0,0,0,0,0
