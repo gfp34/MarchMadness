@@ -81,7 +81,9 @@ def find_best_bracket(teams, folder_name, correct_bracket):
 		for filename in os.listdir(folder_name + "/csv"):
 			b = Bracket(teams)
 			b.load(folder_name + "/csv/" + filename)
-			if b.score(correct_bracket) > best_bracket.score(correct_bracket) if best_bracket is not None else float('-inf'):
+			score = b.score(correct_bracket)
+			print(f"{filename}: {score}")
+			if score > best_bracket.score(correct_bracket) if best_bracket is not None else float('-inf'):
 				best_bracket = b
 				best_bracket_filename = filename
 	except FileNotFoundError:
