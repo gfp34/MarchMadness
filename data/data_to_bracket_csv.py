@@ -1,10 +1,10 @@
 import csv
 
-data_filename = "2021/fivethirtyeight_ncaa_forecasts_2021_final.csv"
+data_filename = "2022/fivethirtyeight_ncaa_forecasts.csv"
 data_csv = open(data_filename, 'r')
 data_reader = csv.DictReader(data_csv)
 
-bracket_filename = "2021/final_bracket_2021.csv"
+bracket_filename = "2022/final_bracket_2022.csv"
 bracket_csv = open(bracket_filename, 'w')
 bracket_writer = csv.writer(bracket_csv, delimiter=',')
 

@@ -48,13 +48,16 @@ RIGHT_CHILD = lambda i: (i * 2) + 2
 
 
 def main():
-	teams = read_teams_file("data/2021/fivethirtyeight_ncaa_forecasts_2021.csv")
+	teams = read_teams_file("data/2022/fivethirtyeight_ncaa_forecasts.csv")
 	# generate_brackets(1000, teams, "1000_brackets")
 	correct_bracket = Bracket(teams)
-	correct_bracket.load("data/2021/final_bracket_2021.csv")
-	best = find_best_bracket(teams, "1000_brackets", correct_bracket)
-	print(best)
-	print(best.score(correct_bracket))
+	correct_bracket.load("data/2022/final_bracket_2022.csv")
+	bracket = Bracket(teams)
+	print(correct_bracket)
+	print("===================================")
+	print(bracket.play(SIMULATED))
+	print(bracket)
+	print(bracket.score(correct_bracket))
 
 
 def generate_brackets(num, teams, folder_name):
