@@ -3,6 +3,7 @@ import csv
 import os
 import random
 import shutil
+import sys
 
 CHALK = 'Chalk'
 SIMULATED = 'Simulated'
@@ -50,18 +51,37 @@ RIGHT_CHILD = lambda i: (i * 2) + 2
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--load", "-l", type=str, help="Load a bracket from a csv file and print it.")
+	subparsers = parser.add_subparsers(dest="command")
+	load_parser = subparsers.add_parser("load", help="Load and display previously saved brackets")
+	load_parser.add_argument("file", type=str, help="Load a bracket from a csv file and print it.")
+
+	save_parser = subparsers.add_parser("new", help="Create and save new brackets") # Generate a new random bracket based on 538 probability data
+	save_parser.add_argument("--save", "-s", type=str, help="Save a bracket as a csv to a file")
+
 	args = parser.parse_args()
+
+	if args.command is None:
+		parser.print_usage()
+		sys.exit(1)
 
 	teams = read_teams_file("data/2022/fivethirtyeight_ncaa_forecasts.csv")
 	correct_bracket = Bracket(teams)
 	correct_bracket.load("data/2022/final_bracket_2022.csv")
 
-	if args.load:
+	bracket = Bracket(teams)
+
+	if args.command == "load":
+		# load command used
+		bracket.load(args.file)
+	elif args.command == "new":
+		# new command used
 		bracket = Bracket(teams)
-		bracket.load(args.load)
-		print(bracket)
-		print(bracket.score(correct_bracket))
+		bracket.play(SIMULATED)
+		if args.save:
+			bracket.save(args.save)
+
+	print(bracket)
+	print(bracket.score(correct_bracket))
 
 
 def generate_brackets(num, teams, folder_name):
