@@ -1,3 +1,4 @@
+import argparse
 import csv
 import os
 import random
@@ -48,16 +49,19 @@ RIGHT_CHILD = lambda i: (i * 2) + 2
 
 
 def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--load", "-l", type=str, help="Load a bracket from a csv file and print it.")
+	args = parser.parse_args()
+
 	teams = read_teams_file("data/2022/fivethirtyeight_ncaa_forecasts.csv")
 	correct_bracket = Bracket(teams)
 	correct_bracket.load("data/2022/final_bracket_2022.csv")
-	generate_brackets(1000, teams, "1000_brackets")
 
-	best_bracket, best_filename = find_best_bracket(teams, "1000_brackets", correct_bracket)
-	print()
-	print(best_filename)
-	print(best_bracket)
-	print(best_bracket.score(correct_bracket))
+	if args.load:
+		bracket = Bracket(teams)
+		bracket.load(args.load)
+		print(bracket)
+		print(bracket.score(correct_bracket))
 
 
 def generate_brackets(num, teams, folder_name):
