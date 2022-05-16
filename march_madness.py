@@ -1,5 +1,6 @@
 import argparse
 import csv
+import datetime
 import os
 import random
 import shutil
@@ -55,33 +56,44 @@ def main():
 	load_parser = subparsers.add_parser("load", help="Load and display previously saved brackets")
 	load_parser.add_argument("file", type=str, help="Load a bracket from a csv file and print it.")
 
-	save_parser = subparsers.add_parser("new", help="Create and save new brackets") # Generate a new random bracket based on 538 probability data
+	# Generate a new random bracket based on 538 probability data
+	save_parser = subparsers.add_parser("new", help="Create and save new brackets")
 	save_parser.add_argument("--save", "-s", type=str, help="Save a bracket as a csv to a file")
+
+	# Generate a group of random brackets
+	gen_parser = subparsers.add_parser("gen", help="Generate a group of brackets")
+	gen_parser.add_argument("--number", "-n", required=True, type=int, help="Number of brackets to be generated")
+	gen_parser.add_argument("--folder", "-f", type=str, default=datetime.datetime.now().strftime("brackets_%Y-%m-%d_%H:%M:%S"),
+							help="Directory where generated brackets will be saved")
 
 	args = parser.parse_args()
 
 	if args.command is None:
-		parser.print_usage()
+		parser.print_usage(sys.stderr)
 		sys.exit(1)
 
 	teams = read_teams_file("data/2022/fivethirtyeight_ncaa_forecasts.csv")
-	correct_bracket = Bracket(teams)
-	correct_bracket.load("data/2022/final_bracket_2022.csv")
 
-	bracket = Bracket(teams)
-
-	if args.command == "load":
-		# load command used
-		bracket.load(args.file)
-	elif args.command == "new":
-		# new command used
+	if args.command == "load" or args.command == "new":
+		correct_bracket = Bracket(teams)
+		correct_bracket.load("data/2022/final_bracket_2022.csv")
 		bracket = Bracket(teams)
-		bracket.play(SIMULATED)
-		if args.save:
-			bracket.save(args.save)
 
-	print(bracket)
-	print(bracket.score(correct_bracket))
+		if args.command == "load":
+			# load command used
+			bracket.load(args.file)
+		elif args.command == "new":
+			# new command used
+			bracket = Bracket(teams)
+			bracket.play(SIMULATED)
+			if args.save:
+				bracket.save(args.save)
+
+		print(bracket)
+		print(bracket.score(correct_bracket))
+
+	elif args.command == "gen":
+		generate_brackets(args.number, teams, args.folder)
 
 
 def generate_brackets(num, teams, folder_name):
@@ -90,11 +102,10 @@ def generate_brackets(num, teams, folder_name):
 	except FileExistsError:
 		shutil.rmtree(folder_name)
 		os.mkdir(folder_name)
-	os.mkdir(folder_name + "/csv")
 	for i in range(num):
 		b = Bracket(teams)
 		b.play(SIMULATED)
-		b.save(f"{folder_name}/csv/bracket_{i}.csv")
+		b.save(f"{folder_name}/bracket_{i}.csv")
 		print("Saved bracket:", i)
 
 
