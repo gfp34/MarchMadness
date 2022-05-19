@@ -53,12 +53,16 @@ RIGHT_CHILD = lambda i: (i * 2) + 2
 def main():
 	parser = argparse.ArgumentParser()
 	subparsers = parser.add_subparsers(dest="command")
+
+	# Load bracket from a given file
 	load_parser = subparsers.add_parser("load", help="Load and display previously saved brackets")
 	load_parser.add_argument("file", type=str, help="Load a bracket from a csv file and print it.")
+	load_parser.add_argument("--diff", "-d", action='store_true', help="Show differences between new bracket and the actual results")
 
 	# Generate a new random bracket based on 538 probability data
 	save_parser = subparsers.add_parser("new", help="Create and save new brackets")
 	save_parser.add_argument("--save", "-s", type=str, help="Save a bracket as a csv to a file")
+	save_parser.add_argument("--diff", "-d", action='store_true', help="Show differences between new bracket and the actual results")
 
 	# Generate a group of random brackets
 	gen_parser = subparsers.add_parser("gen", help="Generate a group of brackets")
@@ -89,7 +93,10 @@ def main():
 			if args.save:
 				bracket.save(args.save)
 
-		print(bracket)
+		if args.diff:
+			bracket.show_diff(correct_bracket)
+		else:
+			print(bracket)
 		print(bracket.score(correct_bracket))
 
 	elif args.command == "gen":
