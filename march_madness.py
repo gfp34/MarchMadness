@@ -1,8 +1,10 @@
 import argparse
+from colorama import Fore, Back
 import csv
 import datetime
 import os
 import random
+import re
 import shutil
 import sys
 
@@ -253,9 +255,29 @@ class Bracket:
 		max_line_len = len(max(game_str_list, key=lambda line: len(line)))
 		for game_line, correct_game_line in zip(game_str_list, correct_game_str_list):
 			if game_line == correct_game_line:
-				print(game_line)
+				# No difference in game_lines, can just print game_line with no highlighting
+				print(f"{game_line:{max_line_len}} |")
 			else:
-				print(f"{game_line}{' ' * (max_line_len - len(game_line))} | {correct_game_line}")
+				# Split game lines into teams and winner by " vs. " and " -> "
+				game_line_tok = re.split(" vs. | -> ", game_line)
+				correct_game_line_tok = re.split(" vs. | -> ", correct_game_line)
+
+				# Build the diff game line by highlighting non matching tokens in red
+				diff_game_line = ""
+				for i, (game_tok, correct_game_tok) in enumerate(zip(game_line_tok, correct_game_line_tok)):
+					if game_tok == correct_game_tok:
+						diff_game_line += Back.RESET + Fore.RESET + game_tok
+					else:
+						diff_game_line += Back.RED + Fore.RESET + game_tok
+
+					if game_tok.startswith("WINNER:") or i == 2:
+						diff_game_line += Back.RESET + Fore.RESET + ""
+					elif i == 0:
+						diff_game_line += Back.RESET + Fore.RESET + " vs. "
+					elif i == 1:
+						diff_game_line += Back.RESET + Fore.RESET + " -> "
+
+				print(f"{diff_game_line} {'-' * (max_line_len - len(game_line) - 1) + ' ' if max_line_len != len(game_line) else ''}| {correct_game_line}")
 
 	def __str__(self):
 		s = ""
