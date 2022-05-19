@@ -240,6 +240,16 @@ class Bracket:
 				played_in_round = 0
 		return total_score
 
+	def show_diff(self, correct_bracket):
+		game_str_list = str(self).splitlines()
+		correct_game_str_list = str(correct_bracket).splitlines()
+		max_line_len = len(max(game_str_list, key=lambda line: len(line)))
+		for game_line, correct_game_line in zip(game_str_list, correct_game_str_list):
+			if game_line == correct_game_line:
+				print(game_line)
+			else:
+				print(f"{game_line}{' ' * (max_line_len - len(game_line))} | {correct_game_line}")
+
 	def __str__(self):
 		s = ""
 		rounds = {
