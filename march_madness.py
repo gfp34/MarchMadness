@@ -185,8 +185,8 @@ class Bracket:
 		bracket_reader = csv.DictReader(bracket_csv)
 		for row in bracket_reader:
 			# Read teams and wins from csv
-			team = Team(row["team_name"], float(row["team_rating"]), int(row["team_seed"][:2]),
-						row["team_region"], bool(int(row["playin_flag"])), int(row["team_id"]))
+			teams_dict = dict(zip([t.team_id for t in self.teams], self.teams))
+			team = teams_dict[int(row["team_id"])]
 			wins = [bool(int(row[f"rd{i}_win"])) for i in range(1, 8)]
 
 			for i, game in enumerate(self.bracket_heap[31:]):
